@@ -109,11 +109,26 @@ void CSchemaDlg::OnCbnSelchangeTablelist()
 				m_SchemaList.InsertItem(i, (char *)ColumnName[i]);
 				temp.Format(_T("%d"), (int)ColumnNameLen[i]);
 				m_SchemaList.SetItem(i, 1, LVIF_TEXT, temp, 0, 0, 0, NULL);
-				temp.Format(_T("%d"), (int)ColumnDataType[i]);
+				switch ((int)ColumnDataType[i])
+				{
+				case 1:
+					temp = "CHAR";
+					break;
+				case 4:
+					temp = "INTEGER";
+					break;
+				case 12:
+					temp = "VARCHAR";
+					break;
+				case -7:
+					temp = "BIT";
+					break;
+				}
 				m_SchemaList.SetItem(i, 2, LVIF_TEXT, temp, 0, 0, 0, NULL);
 				temp.Format(_T("%d"), (int)ColumnDataSize[i]);
 				m_SchemaList.SetItem(i, 3, LVIF_TEXT, temp, 0, 0, 0, NULL);
-				temp.Format(_T("%d"), (int)ColumnDataNullable[i]);
+				if ((int)ColumnDataNullable[i] == 0) temp = "NOT NULL";
+				else temp = "NULL";
 				m_SchemaList.SetItem(i, 4, LVIF_TEXT, temp, 0, 0, 0, NULL);
 
 				printf("\nColumn : %d\n", i + 1);

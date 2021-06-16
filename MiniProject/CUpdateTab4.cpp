@@ -14,6 +14,8 @@ IMPLEMENT_DYNAMIC(CUpdateTab4, CDialogEx)
 
 CUpdateTab4::CUpdateTab4(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_UpdateTab4, pParent)
+	, m_strRoomNo(_T(""))
+	, m_strComNo(_T(""))
 {
 
 }
@@ -26,6 +28,9 @@ void CUpdateTab4::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_SelectList);
+	DDX_Control(pDX, IDC_LIST2, m_SelectList2);
+	DDX_Text(pDX, IDC_EDIT2, m_strRoomNo);
+	DDX_Text(pDX, IDC_EDIT1, m_strComNo);
 }
 
 
@@ -85,8 +90,31 @@ BOOL CUpdateTab4::OnInitDialog()
 		m_SelectList.SetItem(i, 2, LVIF_TEXT, m_Result[3 * i + 2], 0, 0, 0, NULL);
 	}
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 		m_SelectList.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
+	}
+
+	m_SelectList2.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+
+	m_SelectList2.InsertColumn(0, _T("Room No"), LVCFMT_CENTER, -1, -1);
+	m_SelectList2.InsertColumn(1, _T("Floor"), LVCFMT_CENTER, -1, -1);
+
+	for (int i = 0; i < 2; i++) {
+		m_SelectList2.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
+	}
+
+	m_SelectList2.DeleteAllItems();
+
+	query = "SELECT R.ROOMNO, R.FLOOR FROM ROOM AS R WHERE R.PRACTICEROOM=1;";
+	m_Result = odbc.ExecuteSelectQuery(query);
+
+	for (int i = 0; i < m_Result.size() / 2; i++) {
+		m_SelectList2.InsertItem(i, m_Result[2 * i]);
+		m_SelectList2.SetItem(i, 1, LVIF_TEXT, m_Result[2 * i + 1], 0, 0, 0, NULL);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		m_SelectList2.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -97,4 +125,23 @@ BOOL CUpdateTab4::OnInitDialog()
 void CUpdateTab4::OnBnClickedButton1()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CODBC odbc;
+	UpdateData(TRUE);
+
+	odbc.ExecuteQuery("UPDATE COMPUTER SET ROOMNO="+m_strRoomNo+"where COMNO="+m_strComNo);
+
+
+	m_SelectList.DeleteAllItems();
+	m_Result = odbc.ExecuteSelectQuery("SELECT * FROM COMPUTER WHERE COMPUTER.ROOMNO IS NULL");
+
+	for (int i = 0; i < m_Result.size() / 3; i++) {
+		m_SelectList.InsertItem(i, m_Result[3 * i]);
+		m_SelectList.SetItem(i, 1, LVIF_TEXT, m_Result[3 * i + 1], 0, 0, 0, NULL);
+		m_SelectList.SetItem(i, 2, LVIF_TEXT, m_Result[3 * i + 2], 0, 0, 0, NULL);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		m_SelectList.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
+	}
+	UpdateData(FALSE);
 }

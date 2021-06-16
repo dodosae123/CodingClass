@@ -26,4 +26,12 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual void PostNcDestroy();
 	afx_msg void OnClose();
+	afx_msg void OnBnClickedButton1();
+	CListCtrl m_SelectList;
+	CString m_strENo;
+	CString m_strComNo;
+	vector<CString> m_Result;
+	vector<CString> m_Result2;
+	CListCtrl m_SelectList2;
+	afx_msg void OnBnClickedButton2();
 };

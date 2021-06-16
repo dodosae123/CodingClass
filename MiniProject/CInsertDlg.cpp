@@ -171,7 +171,7 @@ void CInsertDlg::RadioCtrl(UINT id) {
 	case 8:
 		currentTable = "PROGRAM";
 		m_Text1 = "Computer No";
-		m_Text2 = "Prgram Name";
+		m_Text2 = "Program Name";
 		m_Text3 = "";
 		m_Text4 = "";
 		m_Text5 = "";
@@ -264,6 +264,10 @@ void CInsertDlg::OnBnClickedButton1()
 		break;
 	case 1:
 		query = "INSERT INTO STUDENT VALUES(" + tmp1 + ",'" + tmp2 + "','" + tmp3 + "'," + tmp4 + ")";
+		if (tmp4.IsEmpty()) {
+			cout << "ss";
+			query = "INSERT INTO STUDENT (STUNO, STUNAME, PHONE) VALUES(" + tmp1 + ",'" + tmp2 + "','" + tmp3 + "')";
+		}
 		break;
 	case 2:
 		query = "INSERT INTO ROOM VALUES(" + tmp1 + "," + tmp2 + "," + tmp3 + ")";
@@ -277,6 +281,17 @@ void CInsertDlg::OnBnClickedButton1()
 	case 5:
 		if (tmp6.MakeUpper().Compare("NULL") != 0) tmp6 = "'" + tmp6 + "'";
 		query = "INSERT INTO EQUIPMENT VALUES(" + tmp1 + ",'" + tmp2 + "','" + tmp3 + "'," + tmp4 + "," + tmp5 + "," + tmp6 + ")";
+		if (tmp4.IsEmpty() && tmp5.IsEmpty()) {
+			query = "INSERT INTO EQUIPMENT (ENO, KIND, QUALITY, DUEDATE) VALUES(" + tmp1 + ",'" + tmp2 + "','" + tmp3 + "'," + tmp6 + ")";
+		}
+		else if (tmp4.IsEmpty()) {
+			cout << "ss";
+			query = "INSERT INTO EQUIPMENT (ENO, KIND, QUALITY, INSNO, DUEDATE) VALUES(" + tmp1 + ",'" + tmp2 + "','" + tmp3 + "'," + tmp5 + "," + tmp6 + ")";
+		}
+		else if (tmp5.IsEmpty()) {
+			cout << "ss";
+			query = "INSERT INTO EQUIPMENT (ENO, KIND, QUALITY, STUNO, DUEDATE) VALUES(" + tmp1 + ",'" + tmp2 + "','" + tmp3 + "'," + tmp4 +  "," + tmp6 + ")";
+		}
 		break;
 	case 6:
 		query = "INSERT INTO AWARD VALUES(" + tmp1 + ",'" + tmp2 + "','" + tmp3 + "'," + tmp4 + "," + tmp5 + ")";

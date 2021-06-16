@@ -28,4 +28,7 @@ public:
 	CListCtrl m_SelectList;
 	afx_msg void OnBnClickedButton1();
 	vector<CString> m_Result;
+	CListCtrl m_SelectList2;
+	CString m_strRoomNo;
+	CString m_strComNo;
 };
